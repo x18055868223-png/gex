@@ -38,6 +38,8 @@
 - `stale`：上一次刷新是否有失败；失败不会清空旧缓存。
 - 抓不到的字段不会让请求失败，而是记入 `missing_fields` 与 `field_status`。
 
+> 每个字段的单位与真实语义见 [`docs/info接口语义文档.md`](docs/info接口语义文档.md)；完整响应示例见 [`docs/info.sample.json`](docs/info.sample.json)。
+
 ## 本地开发（Windows）
 
 需要 Python 3.12。仓库已带 `.venv`，也可自建：
