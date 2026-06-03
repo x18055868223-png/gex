@@ -98,7 +98,10 @@ class MetricsCache:
         field_status: dict[str, dict[str, str]] = {}
         for state in self._sections.values():
             missing_fields.extend(state["missing_fields"])
-            field_status.update(state["field_status"])
+            # Only surface fields that need attention; "ok" entries are pure noise.
+            for path, status in state["field_status"].items():
+                if status.get("status") != "ok":
+                    field_status[path] = status
 
         latest_fetch = max(
             (state.get("fetched_at") for state in self._sections.values() if state.get("fetched_at")),
@@ -137,7 +140,6 @@ class MetricsCache:
                 "last_error": state.get("last_error"),
                 "source_url": state.get("source_url"),
                 "content_hash": state.get("content_hash"),
-                "raw_excerpt": state.get("raw_excerpt"),
                 "missing_fields": state.get("missing_fields", []),
             }
         return states

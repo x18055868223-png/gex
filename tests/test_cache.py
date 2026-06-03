@@ -36,6 +36,11 @@ async def test_refresh_builds_info_payload_and_missing_fields() -> None:
     assert payload["gex_board"]["total_net_gex"] == -67000000.0
     assert "gamma_exposure.n2" in payload["missing_fields"]
     assert payload["field_status"]["gamma_exposure.n2"]["status"] == "missing"
+    # field_status only surfaces problem fields; "ok" entries are dropped as noise.
+    assert all(s["status"] != "ok" for s in payload["field_status"].values())
+    assert "gex_board.total_net_gex" not in payload["field_status"]
+    # raw_excerpt debug blob is no longer exposed in the response.
+    assert "raw_excerpt" not in payload["sections"]["gex_board"]
 
 
 @pytest.mark.asyncio
