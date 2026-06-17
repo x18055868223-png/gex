@@ -56,9 +56,11 @@ class ScraplingScraper:
             "timeout": self.settings.request_timeout_seconds * 1000,
             "disable_resources": self.settings.browser_disable_resources,
         }
+        flags = ["--disable-dev-shm-usage", "--disable-gpu"]
         if self.settings.browser_no_sandbox:
             # Required for headless Chromium as non-root on locked-down hosts.
-            kwargs["extra_flags"] = ["--no-sandbox", "--disable-dev-shm-usage"]
+            flags.append("--no-sandbox")
+        kwargs["extra_flags"] = flags
         if self.settings.browser_wait_ms > 0:
             # Fixed settle time for the websocket-fed panels to render.
             kwargs["wait"] = self.settings.browser_wait_ms
@@ -67,9 +69,10 @@ class ScraplingScraper:
     def _text_from_playwright(self, url: str) -> str:
         from playwright.sync_api import sync_playwright
 
-        launch_args: dict[str, Any] = {"headless": True}
+        flags = ["--disable-dev-shm-usage", "--disable-gpu"]
         if self.settings.browser_no_sandbox:
-            launch_args["args"] = ["--no-sandbox", "--disable-dev-shm-usage"]
+            flags.append("--no-sandbox")
+        launch_args: dict[str, Any] = {"headless": True, "args": flags}
         timeout_ms = self.settings.request_timeout_seconds * 1000
         with sync_playwright() as pw:
             browser = pw.chromium.launch(**launch_args)

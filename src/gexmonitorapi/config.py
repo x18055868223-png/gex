@@ -14,7 +14,8 @@ class Settings(BaseSettings):
     asset: str = "BTC"
     base_url: str = "https://gexmonitor.com"
     refresh_interval_seconds: int = Field(
-        default=600,
+        # 30 min by default: fewer headless-browser memory spikes on small hosts.
+        default=1800,
         validation_alias=AliasChoices("REFRESH_INTERVAL_SECONDS", "GEXMONITOR_REFRESH_INTERVAL_SECONDS"),
     )
     request_timeout_seconds: int = Field(

@@ -19,6 +19,15 @@ RestartSec=5
 # First request launches a headless browser; give startup some slack.
 TimeoutStartSec=90
 
+# --- memory containment (CRITICAL on small shared boxes) ---
+# Bounds the blast radius: if the headless browser spikes past these limits the
+# kernel reclaims/kills ONLY this service's cgroup, so it can never thrash the
+# whole host into OOM and take down co-located services (e.g. FMZ). If scrapes
+# start failing under load, raise these or move the service to its own instance.
+MemoryHigh=450M
+MemoryMax=600M
+MemorySwapMax=512M
+
 # --- light hardening (kept loose so the headless browser can launch) ---
 NoNewPrivileges=true
 PrivateTmp=true
